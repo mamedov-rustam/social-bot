@@ -1,10 +1,11 @@
-package com.social.bot.vk.client;
+package com.social.bot.vk.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.social.bot.vk.client.model.City;
-import com.social.bot.vk.client.model.Country;
-import feign.Headers;
-import feign.RequestLine;
+import com.social.bot.vk.model.City;
+import com.social.bot.vk.model.Country;
+import com.social.bot.vk.runner.people.model.VkCitiesResponseWrapper;
+import com.social.bot.vk.common.VkSearchResponseWrapper;
+import com.social.bot.vk.common.VkSearchRequest;
 import lombok.SneakyThrows;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -23,19 +24,29 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 
 @Service
-public class VkHttpClient {
+public class VkSearchHttpClient {
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public VkHttpClient(HttpClient httpClient, ObjectMapper objectMapper) {
+    public VkSearchHttpClient(HttpClient httpClient, ObjectMapper objectMapper) {
         this.httpClient = httpClient;
         this.objectMapper = objectMapper;
     }
 
     @SneakyThrows
-    public VkSearchResponseWrapper searchForUsers(VkSearchRequest searchRequest) {
-        HttpGet request = new HttpGet("https://api.vk.com/method/users.search");
+    public VkSearchResponseWrapper searchForPeopleInGroup(VkSearchRequest searchRequest) {
+        return search(searchRequest, "https://api.vk.com/method/groups.getMembers");
+    }
+
+    @SneakyThrows
+    public VkSearchResponseWrapper searchForPeople(VkSearchRequest searchRequest) {
+        return search(searchRequest, "https://api.vk.com/method/users.search");
+    }
+
+    @SneakyThrows
+    private VkSearchResponseWrapper search(VkSearchRequest searchRequest, String url) {
+        HttpGet request = new HttpGet(url);
         List<NameValuePair> params = toNameValuePairs(searchRequest);
         URI uri = new URIBuilder(request.getURI()).addParameters(params).build();
 

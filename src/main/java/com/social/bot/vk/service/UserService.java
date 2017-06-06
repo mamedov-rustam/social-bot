@@ -1,20 +1,19 @@
 package com.social.bot.vk.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.social.bot.vk.client.VkHttpClient;
-import com.social.bot.vk.client.VkSearchRequest;
-import com.social.bot.vk.client.VkSearchResponseWrapper;
-import com.social.bot.vk.client.model.User;
+import com.social.bot.vk.common.VkSearchHttpClient;
+import com.social.bot.vk.common.VkSearchRequest;
+import com.social.bot.vk.common.VkSearchResponse;
+import com.social.bot.vk.common.VkSearchResponseWrapper;
+import com.social.bot.vk.model.User;
 import lombok.SneakyThrows;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
 @Service
 public class UserService {
@@ -23,27 +22,26 @@ public class UserService {
     @Value("${vk.page.size}")
     private Long pageSize;
 
-    private final VkHttpClient vkHttpClient;
+    private final VkSearchHttpClient vkHttpClient;
     private final ObjectMapper objectMapper;
 
     @Autowired
-    public UserService(VkHttpClient vkHttpClient, ObjectMapper objectMapper) {
+    public UserService(VkSearchHttpClient vkHttpClient, ObjectMapper objectMapper) {
         this.vkHttpClient = vkHttpClient;
         this.objectMapper = objectMapper;
     }
 
-    // ToDo: change to simple List<User>
-    public VkSearchResponseWrapper findUsers(VkSearchRequest vkSearchRequest) {
-        return vkHttpClient.searchForUsers(vkSearchRequest);
+    public VkSearchResponseWrapper findUsersInSearch(VkSearchRequest vkSearchRequest) {
+        return vkHttpClient.searchForPeople(vkSearchRequest);
     }
 
-    public Long findTotalPages(VkSearchRequest vkSearchRequest) {
-        VkSearchRequest requestClone = vkSearchRequest.clone();
-        requestClone.setCount(1L);
-        requestClone.setOffset(0L);
+    public VkSearchResponseWrapper findUsersInGroup(VkSearchRequest vkSearchRequest) {
+        return vkHttpClient.searchForPeopleInGroup(vkSearchRequest);
+    }
 
-        Long totalCount = vkHttpClient.searchForUsers(requestClone).getResponse().getCount();
-        return totalCount / pageSize;
+    public Long findTotalPagesWithUsersForGroup(VkSearchRequest vkSearchRequest) {
+        VkSearchResponseWrapper vkSearchResponseWrapper = vkHttpClient.searchForPeopleInGroup(vkSearchRequest);
+        return (long) Math.ceil(vkSearchResponseWrapper.getResponse().getCount() / (double)pageSize);
     }
 
     @SneakyThrows
@@ -55,7 +53,7 @@ public class UserService {
             return;
         }
 
-        List<User> newUsers = new ArrayList<>(users);
+        Set<User> newUsers = new HashSet<>(users);
         List<User> savedUsers = Arrays.asList(objectMapper.readValue(file, User[].class));
         newUsers.addAll(savedUsers);
 

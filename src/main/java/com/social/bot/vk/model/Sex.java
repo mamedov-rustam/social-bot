@@ -1,4 +1,4 @@
-package com.social.bot.vk.client.model;
+package com.social.bot.vk.model;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 

@@ -1,28 +1,28 @@
-package com.social.bot.vk;
+package com.social.bot.vk.runner.people;
 
-import com.social.bot.vk.client.VkSearchRequest;
-import com.social.bot.vk.client.VkSearchResponse;
-import com.social.bot.vk.client.VkSearchResponseWrapper;
-import com.social.bot.vk.client.model.Country;
-import com.social.bot.vk.client.model.Sex;
-import com.social.bot.vk.client.model.Status;
-import com.social.bot.vk.client.model.User;
-import com.social.bot.vk.service.UserService;
+import com.social.bot.vk.common.VkSearchRequest;
+import com.social.bot.vk.common.VkSearchResponse;
+import com.social.bot.vk.model.Country;
+import com.social.bot.vk.model.Sex;
+import com.social.bot.vk.model.Status;
+import com.social.bot.vk.model.User;
 import com.social.bot.vk.service.VkSearchRequestService;
+import com.social.bot.vk.service.UserService;
+import com.social.bot.vk.utils.VkUtils;
 import lombok.SneakyThrows;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
-public class VkBotRunner implements ApplicationRunner {
+public class VkPeopleSearchBotRunner implements ApplicationRunner {
+    @Value("${vk.bot.people.search.enable}")
+    private boolean isEnabled;
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -31,8 +31,11 @@ public class VkBotRunner implements ApplicationRunner {
     @SneakyThrows
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
-        Long proccessedUsers = 0L;
+        if (!isEnabled) {
+            return;
+        }
 
+        Long proccessedUsers = 0L;
         Country country = Country.UA;
         String cityName = "Kharkiv";
 
@@ -47,7 +50,7 @@ public class VkBotRunner implements ApplicationRunner {
                         pageRequest.setMaxAge(age);
                         pageRequest.setBirthdayMonth(month);
 
-                        VkSearchResponse resp = userService.findUsers(pageRequest).getResponse();
+                        VkSearchResponse resp = userService.findUsersInSearch(pageRequest).getResponse();
                         System.out.println("********************");
                         System.out.println("Total items: " + resp.getCount());
                         long missedUsers = resp.getCount() - 1000;
@@ -63,31 +66,18 @@ public class VkBotRunner implements ApplicationRunner {
 
                         List<User> users = resp.getUsers();
                         proccessedUsers += users.size();
-                        List<User> usersWithInstagram = withInstagram(users);
+                        List<User> usersWithInstagram = VkUtils.withInstagram(users);
 
                         userService.save(usersWithInstagram);
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
                         System.out.println("Total proccessed users: " + proccessedUsers);
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-                        randomSleep(700L);
+                        VkUtils.randomSleep(500L);
                     }
                 }
             }
         }
 
         System.exit(0);
-    }
-
-    @SneakyThrows
-    private void randomSleep(Long mills) {
-        Random random = new Random();
-        double randomDouble = random.nextDouble();
-        Thread.sleep(Math.round(randomDouble * mills));
-    }
-
-    private List<User> withInstagram(List<User> users) {
-        return users.stream()
-                .filter(user -> StringUtils.isNotEmpty(user.getInstagram()))
-                .collect(toList());
     }
 }

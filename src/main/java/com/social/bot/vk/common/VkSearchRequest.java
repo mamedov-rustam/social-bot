@@ -1,8 +1,8 @@
-package com.social.bot.vk.client;
+package com.social.bot.vk.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.social.bot.vk.client.model.*;
+import com.social.bot.vk.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +45,8 @@ public class VkSearchRequest {
     private Status status;
     @JsonProperty("birth_month")
     private Integer birthdayMonth;
+    @JsonProperty("group_id")
+    private String groupId;
 
     //ToDo: investigate better solution
     public VkSearchRequest clone() {

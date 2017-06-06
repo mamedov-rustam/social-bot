@@ -1,4 +1,4 @@
-package com.social.bot.vk.client;
+package com.social.bot.vk.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

@@ -1,16 +1,17 @@
 package com.social.bot.vk.service;
 
 
-import com.social.bot.vk.client.VkSearchRequest;
-import com.social.bot.vk.client.model.City;
-import com.social.bot.vk.client.model.Country;
+import com.social.bot.vk.common.VkSearchRequest;
+import com.social.bot.vk.model.City;
+import com.social.bot.vk.model.Country;
+import com.social.bot.vk.runner.people.service.GeoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
-import static com.social.bot.vk.client.model.InfoField.CONNECTIONS;
+import static com.social.bot.vk.model.InfoField.CONNECTIONS;
 
 @Service
 public class VkSearchRequestService {
@@ -28,20 +29,15 @@ public class VkSearchRequestService {
         this.geoService = geoService;
     }
 
-    public VkSearchRequest createGeoRequest(Country country, String cityName, Long pageNumber) {
-        VkSearchRequest request = createTemplateRequest();
+    public VkSearchRequest createRequest(Long pageNumber) {
+        VkSearchRequest request = createRequest();
         request.setOffset(pageSize * pageNumber);
-        request.setCountry(country);
-
-        // ToDo: create cache for cities
-        City city = geoService.findCity(country, cityName).get();
-        request.setCity(city);
 
         return request;
     }
 
     public VkSearchRequest createGeoRequest(Country country, String cityName) {
-        VkSearchRequest request = createTemplateRequest();
+        VkSearchRequest request = createRequest();
         // ToDo: create cache for cities
         City city = geoService.findCity(country, cityName).get();
         request.setCity(city);
@@ -49,7 +45,7 @@ public class VkSearchRequestService {
         return request;
     }
 
-    private VkSearchRequest createTemplateRequest() {
+    public VkSearchRequest createRequest() {
         return VkSearchRequest.builder()
                 .version(apiVersion)
                 .accessToken(accessToken)
