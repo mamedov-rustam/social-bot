@@ -1,24 +1,24 @@
 package com.social.bot.vk.runner.merge;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.social.bot.vk.model.User;
+import com.social.bot.vk.service.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.util.*;
 
 @Service
+@Order(2)
 public class MergeUniqueUsersBotRunner implements ApplicationRunner {
-    @Value("${bot.merge.users.directory}")
-    private String pathToUserFiles;
-    @Value("${bot.merge.users.enable}")
+    @Value("${vk.bot.merge.users.enable}")
     private boolean isEnabled;
+
     @Autowired
-    private ObjectMapper objectMapper;
+    private UserRepository userRepository;
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
@@ -26,33 +26,17 @@ public class MergeUniqueUsersBotRunner implements ApplicationRunner {
             return;
         }
 
-        File[] files = new File(pathToUserFiles).listFiles();
-
-        if (files == null) {
-            System.out.println("There is no files in " + pathToUserFiles);
-            return;
-        }
-
         long startTime = System.currentTimeMillis();
-        Set<User> users = new HashSet<>();
-        Long objectCount = 0L;
-        for (File file : files) {
-            if (!file.getName().endsWith(".json")) {
-                continue;
-            }
+        System.out.println("\n\n\n-------------------------------------------------");
+        System.out.println("Start merging source users");
 
-            System.out.println("Loaded " + file.getName());
-            List<User> loadedUsers = Arrays.asList(objectMapper.readValue(file, User[].class));
-            objectCount += loadedUsers.size();
-            users.addAll(loadedUsers);
-        }
+        List<User> usersList = userRepository.loadSourceUsers();
+        Set<User> users = new HashSet<>(usersList);
+        List<User> uniqueUsers = new ArrayList<>(users);
+        userRepository.saveMergedUsers(uniqueUsers);
 
-        objectMapper.writeValue(new File(pathToUserFiles + "/merged_result.json"), users);
-
-        System.out.println("Merged " + objectCount + " objects to " + users.size() + " objects.");
-        long spentTime = System.currentTimeMillis() - startTime;
-        System.out.println("Spent " + spentTime + " mills.");
-
-        System.exit(0);
+        System.out.println("Merged from " + usersList.size() + " to " + users.size());
+        System.out.println("Time spent " + (System.currentTimeMillis() - startTime) + " mills.");
+        System.out.println("-------------------------------------------------");
     }
 }

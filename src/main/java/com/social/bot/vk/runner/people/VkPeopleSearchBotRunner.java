@@ -6,25 +6,30 @@ import com.social.bot.vk.model.Country;
 import com.social.bot.vk.model.Sex;
 import com.social.bot.vk.model.Status;
 import com.social.bot.vk.model.User;
+import com.social.bot.vk.service.UserRepository;
 import com.social.bot.vk.service.VkSearchRequestService;
-import com.social.bot.vk.service.UserService;
+import com.social.bot.vk.service.UserSearchService;
 import com.social.bot.vk.utils.VkUtils;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Order(1)
 public class VkPeopleSearchBotRunner implements ApplicationRunner {
     @Value("${vk.bot.people.search.enable}")
     private boolean isEnabled;
 
     @Autowired
-    private UserService userService;
+    private UserSearchService userService;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private VkSearchRequestService vkSearchRequestService;
 
@@ -68,7 +73,7 @@ public class VkPeopleSearchBotRunner implements ApplicationRunner {
                         proccessedUsers += users.size();
                         List<User> usersWithInstagram = VkUtils.withInstagram(users);
 
-                        userService.save(usersWithInstagram);
+                        userRepository.saveSourceUsers(usersWithInstagram, "from_search");
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
                         System.out.println("Total proccessed users: " + proccessedUsers);
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");

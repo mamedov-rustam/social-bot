@@ -5,6 +5,7 @@ import com.social.bot.vk.model.User;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
 import java.util.List;
 import java.util.Random;
 
@@ -16,6 +17,11 @@ public class VkUtils {
         return users.stream()
                 .filter(user -> StringUtils.isNotEmpty(user.getInstagram()))
                 .collect(toList());
+    }
+
+    public static boolean isJsonFileExist(String path) {
+        File file = new File(path + ".json");
+        return file.isFile() && file.exists();
     }
 
     @SneakyThrows

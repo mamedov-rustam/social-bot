@@ -1,44 +1,40 @@
 package com.social.bot.vk.runner.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.social.bot.vk.common.VkSearchHttpClient;
 import com.social.bot.vk.common.VkSearchRequest;
 import com.social.bot.vk.model.InfoField;
 import com.social.bot.vk.model.User;
-import com.social.bot.vk.service.UserService;
+import com.social.bot.vk.service.UserRepository;
 import com.social.bot.vk.service.VkSearchRequestService;
 import com.social.bot.vk.utils.VkUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
+@Order(3)
 public class FilterBotApplicationRunner implements ApplicationRunner {
-    @Value("${bot.filter.users.enable}")
+    @Value("${vk.bot.filter.users.enable}")
     private boolean isEnabled;
-    @Value("${bot.filter.users.file}")
-    private String pathToMergedFile;
-    @Value("${bot.filter.batch.size}")
+    @Value("${vk.bot.filter.batch.size}")
     private Integer batchSize;
-    
+    @Value("${vk.bot.filter.birthday.year}")
+    private Integer birthdayYear;
+
     @Autowired
     private VkSearchHttpClient vkSearchHttpClient;
     @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
     private VkSearchRequestService vkSearchRequestService;
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
@@ -48,10 +44,10 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
 
         long startAppTime = System.currentTimeMillis();
 
-        List<User> loadedUsers = Arrays.asList(objectMapper.readValue(new File(pathToMergedFile), User[].class));
+        List<User> loadedUsers = userRepository.loadMergedUsers();
         int totalRequests = (int) Math.ceil(loadedUsers.size() / batchSize);
 
-        System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-");
+        System.out.println("\n\n\n-*-*-*-*-*-*-*-*-*-*-*-*-");
         System.out.println("Total users: " + loadedUsers.size());
         System.out.println("Batch size: " + batchSize);
         System.out.println("Total requests: " + totalRequests);
@@ -72,18 +68,16 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
             List<User> users = vkSearchBatchUsersResponse.getUsers();
             List<User> filteredUsers = filterByDate(users);
             System.out.println("Filter from " + batchSize + " to " + filteredUsers.size());
-            userService.save(filteredUsers);
+            userRepository.saveFilteredUsers(filteredUsers);
             double spentTime = (System.currentTimeMillis() - startTime) / 1000d;
             System.out.println("Spent time: " + spentTime + " seconds.");
-            System.out.println("Remains requests: " + (totalRequests - (currentCounter+1)));
+            System.out.println("Remains requests: " + (totalRequests - (currentCounter + 1)));
             System.out.println("---------------------------------------");
             VkUtils.randomSleep(350L);
         }
 
         double totalTimeSpent = (System.currentTimeMillis() - startAppTime) / 1000d;
         System.out.println("Total time spent: " + totalTimeSpent + " seconds.");
-
-        System.exit(0);
     }
 
     private List<User> filterByDate(List<User> users) {
@@ -95,7 +89,7 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
                 .filter(user -> {
                     String birthdayDate = user.getBirthdayDate();
                     int year = Integer.parseInt(birthdayDate.split("\\.")[2]);
-                    return year <= 1996;
+                    return year <= birthdayYear;
                 })
                 .collect(toList());
     }
