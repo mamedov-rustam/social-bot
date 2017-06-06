@@ -7,11 +7,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class City {
+    private String code;
     private String name;
-    private Long code;
 
     @JsonValue
-    public Long getCode() {
+    public String getCode() {
         return code;
     }
 }

@@ -1,20 +1,20 @@
 package com.social.bot.vk.client;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.social.bot.vk.client.model.City;
-import com.social.bot.vk.client.model.Country;
-import com.social.bot.vk.client.model.InfoField;
-import com.social.bot.vk.client.model.Sex;
+import com.social.bot.vk.client.model.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VkSearchRequest {
     @JsonProperty("access_token")
@@ -41,4 +41,16 @@ public class VkSearchRequest {
     private Integer maxAge;
     @JsonProperty("has_photo")
     private Boolean hasPhoto;
+    @JsonProperty("status")
+    private Status status;
+    @JsonProperty("birth_month")
+    private Integer birthdayMonth;
+
+    //ToDo: investigate better solution
+    public VkSearchRequest clone() {
+        VkSearchRequest requestClone = new VkSearchRequest();
+        BeanUtils.copyProperties(this, requestClone);
+
+        return requestClone;
+    }
 }

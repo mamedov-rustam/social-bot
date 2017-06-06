@@ -3,7 +3,7 @@ package com.social.bot.vk.client.model;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Sex {
-    FEMALE(1), MALE(2), ALL(3);
+    FEMALE(1), MALE(2);
 
     private Integer code;
 
