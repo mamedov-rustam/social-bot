@@ -26,8 +26,10 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
     private boolean isEnabled;
     @Value("${vk.bot.filter.batch.size}")
     private Integer batchSize;
-    @Value("${vk.bot.filter.birthday.year}")
-    private Integer birthdayYear;
+    @Value("${vk.bot.filter.birthday.year.max}")
+    private Integer birthdayYearMax;
+    @Value("${vk.bot.filter.birthday.year.min}")
+    private Integer birthdayYearMin;
 
     @Autowired
     private VkSearchHttpClient vkSearchHttpClient;
@@ -53,6 +55,7 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
         System.out.println("Total requests: " + totalRequests);
         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-");
 
+        long totalSavedUsers = 0L;
         for (int currentCounter = 0; currentCounter < totalRequests; currentCounter++) {
             long startTime = System.currentTimeMillis();
             System.out.println("\n---------------------------------------");
@@ -68,6 +71,7 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
             List<User> users = vkSearchBatchUsersResponse.getUsers();
             List<User> filteredUsers = filterByDate(users);
             System.out.println("Filter from " + batchSize + " to " + filteredUsers.size());
+            totalSavedUsers += filteredUsers.size();
             userRepository.saveFilteredUsers(filteredUsers);
             double spentTime = (System.currentTimeMillis() - startTime) / 1000d;
             System.out.println("Spent time: " + spentTime + " seconds.");
@@ -77,7 +81,10 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
         }
 
         double totalTimeSpent = (System.currentTimeMillis() - startAppTime) / 1000d;
-        System.out.println("Total time spent: " + totalTimeSpent + " seconds.");
+        System.out.println("Total saved users: " + totalSavedUsers);
+        System.out.println("Total time spent for filtering: " + totalTimeSpent + " seconds.");
+
+        System.exit(0);
     }
 
     private List<User> filterByDate(List<User> users) {
@@ -89,7 +96,7 @@ public class FilterBotApplicationRunner implements ApplicationRunner {
                 .filter(user -> {
                     String birthdayDate = user.getBirthdayDate();
                     int year = Integer.parseInt(birthdayDate.split("\\.")[2]);
-                    return year <= birthdayYear;
+                    return year >= birthdayYearMin && year <= birthdayYearMax;
                 })
                 .collect(toList());
     }

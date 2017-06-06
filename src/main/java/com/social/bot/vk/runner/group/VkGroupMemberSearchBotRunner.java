@@ -64,7 +64,7 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
 
             System.out.println("\n-----------------------------");
             long startTime = System.currentTimeMillis();
-            System.out.println("Start fetching page #" + (currentPage + 1));
+            System.out.println("Start fetching page #" + (currentPage + 1) + " for " + groupId);
             VkSearchResponseWrapper vkSearchResponseWrapper = userSearchService.findUsersInGroup(request);
 
             List<User> users = vkSearchResponseWrapper.getResponse().getUsers();
@@ -78,11 +78,11 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
             System.out.println("Time spent: " + spentTime + " seconds");
             System.out.println("Remains pages: " + (totalPages - currentPage - 1));
             System.out.println("-----------------------------");
-            VkUtils.randomSleep(500L);
+            VkUtils.randomSleep(350L);
         }
 
         double appSpentTime = (System.currentTimeMillis() - (double) appStartTime) / 1000;
 
-        System.out.println("Total time spent: " + appSpentTime + " seconds");
+        System.out.println("Total time spent for fetching sources: " + appSpentTime + " seconds");
     }
 }

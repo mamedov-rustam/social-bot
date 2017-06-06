@@ -19,7 +19,7 @@ public class VkSearchRequestService {
     private String accessToken;
     @Value("${vk.api.version}")
     private String apiVersion;
-    @Value("${vk.page.size}")
+    @Value("${vk.fetch.size}")
     private Long pageSize;
 
     private final GeoService geoService;

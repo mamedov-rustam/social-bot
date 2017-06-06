@@ -40,7 +40,7 @@ public class VkPeopleSearchBotRunner implements ApplicationRunner {
             return;
         }
 
-        Long proccessedUsers = 0L;
+        Long sourceUsers = 0L;
         Country country = Country.UA;
         String cityName = "Kharkiv";
 
@@ -70,12 +70,12 @@ public class VkPeopleSearchBotRunner implements ApplicationRunner {
                         System.out.println("********************");
 
                         List<User> users = resp.getUsers();
-                        proccessedUsers += users.size();
+                        sourceUsers += users.size();
                         List<User> usersWithInstagram = VkUtils.withInstagram(users);
 
                         userRepository.saveSourceUsers(usersWithInstagram, "from_search");
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
-                        System.out.println("Total proccessed users: " + proccessedUsers);
+                        System.out.println("Total saved source users: " + sourceUsers);
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");
                         VkUtils.randomSleep(500L);
                     }
