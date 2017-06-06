@@ -46,7 +46,7 @@ public class MergeUniqueUsersBotRunner implements ApplicationRunner {
         objectMapper.writeValue(new File(pathToUserFiles + "/_result_.json"), users);
 
         System.out.println("Merged " + objectCount + " objects to " + users.size() + " objects.");
-        long spentTime = (System.currentTimeMillis() - startTime) / 1000;
-        System.out.println("Spent " + spentTime + " seconds.");
+        long spentTime = System.currentTimeMillis() - startTime;
+        System.out.println("Spent " + spentTime + " mills.");
     }
 }
