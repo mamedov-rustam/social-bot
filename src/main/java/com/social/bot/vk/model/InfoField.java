@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum InfoField {
     CONNECTIONS("connections"), CONTACTS("contacts"),
-    COUNTERS("counters"), PHOTO("photo");
+    COUNTERS("counters"), PHOTO("photo"), BIRTHDAY_DATE("bdate");
 
     private String value;
 

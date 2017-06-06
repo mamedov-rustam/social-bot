@@ -8,7 +8,7 @@ import lombok.Data;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
     @JsonProperty("id")
-    private Long id;
+    private String id;
     @JsonProperty("first_name")
     private String firstName;
     @JsonProperty("last_name")
@@ -23,4 +23,6 @@ public class User {
     private String facebook;
     @JsonProperty("skype")
     private String skype;
+    @JsonProperty("bdate")
+    private String birthdayDate;
 }

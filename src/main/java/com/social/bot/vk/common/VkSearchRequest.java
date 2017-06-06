@@ -29,6 +29,8 @@ public class VkSearchRequest {
     private Long count;
     @JsonProperty("fields")
     private List<InfoField> fields;
+    @JsonProperty("user_ids")
+    private List<String> userIds;
     @JsonProperty("country")
     private Country country;
     @JsonProperty("city")

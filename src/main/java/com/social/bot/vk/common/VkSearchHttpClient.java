@@ -3,6 +3,7 @@ package com.social.bot.vk.common;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.social.bot.vk.model.City;
 import com.social.bot.vk.model.Country;
+import com.social.bot.vk.runner.filter.VkSearchBatchUsersResponse;
 import com.social.bot.vk.runner.people.model.VkCitiesResponseWrapper;
 import com.social.bot.vk.common.VkSearchResponseWrapper;
 import com.social.bot.vk.common.VkSearchRequest;
@@ -42,6 +43,18 @@ public class VkSearchHttpClient {
     @SneakyThrows
     public VkSearchResponseWrapper searchForPeople(VkSearchRequest searchRequest) {
         return search(searchRequest, "https://api.vk.com/method/users.search");
+    }
+
+    @SneakyThrows
+    public VkSearchBatchUsersResponse searchForPeopleBatch(VkSearchRequest searchRequest) {
+        HttpGet request = new HttpGet("https://api.vk.com/method/users.get");
+        List<NameValuePair> params = toNameValuePairs(searchRequest);
+        URI uri = new URIBuilder(request.getURI()).addParameters(params).build();
+
+        request.setURI(uri);
+        InputStream input = httpClient.execute(request).getEntity().getContent();
+
+        return objectMapper.readValue(input, VkSearchBatchUsersResponse.class);
     }
 
     @SneakyThrows
