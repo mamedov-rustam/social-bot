@@ -37,16 +37,22 @@ public class MergeUniqueUsersBotRunner implements ApplicationRunner {
         Set<User> users = new HashSet<>();
         Long objectCount = 0L;
         for (File file : files) {
+            if (!file.getName().endsWith(".json")) {
+                continue;
+            }
+
             System.out.println("Loaded " + file.getName());
             List<User> loadedUsers = Arrays.asList(objectMapper.readValue(file, User[].class));
             objectCount += loadedUsers.size();
             users.addAll(loadedUsers);
         }
 
-        objectMapper.writeValue(new File(pathToUserFiles + "/_result_.json"), users);
+        objectMapper.writeValue(new File(pathToUserFiles + "/merged_result.json"), users);
 
         System.out.println("Merged " + objectCount + " objects to " + users.size() + " objects.");
         long spentTime = System.currentTimeMillis() - startTime;
         System.out.println("Spent " + spentTime + " mills.");
+
+        System.exit(0);
     }
 }
