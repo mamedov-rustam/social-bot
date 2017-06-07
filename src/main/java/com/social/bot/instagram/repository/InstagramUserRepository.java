@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface InstagramUserRepository {
     void saveFilteredUsers(List<InstagramUser> instagramUsers);
+    List<InstagramUser> loadFilteredUsers();
 }

@@ -20,4 +20,9 @@ public class InstagramUserRepositoryImpl extends AbstractRepository<InstagramUse
     public void saveFilteredUsers(List<InstagramUser> instagramUsers) {
         save(instagramUsers, InstagramUser[].class, instagramFilteredOutFile);
     }
+
+    @Override
+    public List<InstagramUser> loadFilteredUsers() {
+        return load(InstagramUser[].class, instagramFilteredOutFile);
+    }
 }

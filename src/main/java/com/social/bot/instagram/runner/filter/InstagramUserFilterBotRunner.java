@@ -1,4 +1,4 @@
-package com.social.bot.instagram.runner;
+package com.social.bot.instagram.runner.filter;
 
 import com.social.bot.instagram.client.InstagramHttpClient;
 import com.social.bot.instagram.model.InstagramUser;
@@ -18,7 +18,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -27,7 +26,7 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 @Order(3)
-public class InstagramUserFilerRunner implements ApplicationRunner {
+public class InstagramUserFilterBotRunner implements ApplicationRunner {
     @Value("${instagram.bot.filter.enable}")
     private boolean isEnabled;
 

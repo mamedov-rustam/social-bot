@@ -109,6 +109,11 @@
       "name": "instagram.filter.output",
       "type": "java.lang.String",
       "description": "Description for instagram.filter.output."
+    },
+    {
+      "name": "instagram.bot.follower.enable",
+      "type": "java.lang.String",
+      "description": "Description for instagram.bot.follower.enable."
     }
   ]
 }
