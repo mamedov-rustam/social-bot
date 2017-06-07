@@ -1,6 +1,6 @@
 # Instagram
 
-#### Filtering speed
+### Filtering speed
 
 **-> 3 users/second** 
 
@@ -8,7 +8,7 @@
 
 **-> 10 800 users/hour**
 
-#### Filtering params
+### Filtering params
 
 - **instagram.filter.minus.words** [string] - divided by comma words. 
 If any of this words will presented in user description, then user will be skipped.
