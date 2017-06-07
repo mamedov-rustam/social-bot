@@ -119,13 +119,16 @@ public class InstagramUserFilerRunner implements ApplicationRunner {
     }
 
     private void logCurrentState(Long total, Long requested, Long withErrors, Long successfullySaved, Long startTime) {
-        double spentTime = (System.currentTimeMillis() - startTime) / 1000d;
+        long spentTimeInSeconds = (System.currentTimeMillis() - startTime) / 1000;
+        long spentMinutes = spentTimeInSeconds / 60;
+        long spentSeconds = spentTimeInSeconds % 60;
+
         System.out.println("----------------------------");
         System.out.println("Sent requests: " + requested);
         System.out.println("Remains: " + (total - requested));
         System.out.println("With errors: " + withErrors);
         System.out.println("Good users: " + successfullySaved);
-        System.out.println("Time spent: " + spentTime + " seconds.");
+        System.out.println("Time spent: " + spentMinutes + " minutes " + spentSeconds + " seconds.");
         System.out.println("----------------------------");
     }
 
