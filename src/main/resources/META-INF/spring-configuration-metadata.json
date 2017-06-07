@@ -1,0 +1,114 @@
+{
+  "properties": [
+    {
+      "name": "vk.api.version",
+      "type": "java.lang.String",
+      "description": "Description for vk.api.version."
+    },
+    {
+      "name": "vk.api.access.token",
+      "type": "java.lang.String",
+      "description": "Description for vk.api.access.token."
+    },
+    {
+      "name": "instagram.api.access.token",
+      "type": "java.lang.String",
+      "description": "Description for instagram.api.access.token."
+    },
+    {
+      "name": "vk.bot.people.search.enable",
+      "type": "java.lang.String",
+      "description": "Description for vk.bot.people.search.enable."
+    },
+    {
+      "name": "vk.bot.group.members.search.enable",
+      "type": "java.lang.String",
+      "description": "Description for vk.bot.group.members.search.enable."
+    },
+    {
+      "name": "vk.bot.merge.users.enable",
+      "type": "java.lang.String",
+      "description": "Description for vk.bot.merge.users.enable."
+    },
+    {
+      "name": "instagram.bot.filter.enable",
+      "type": "java.lang.String",
+      "description": "Description for instagram.bot.filter.enable."
+    },
+    {
+      "name": "vk.fetch.page.size",
+      "type": "java.lang.String",
+      "description": "Description for vk.fetch.page.size."
+    },
+    {
+      "name": "vk.fetch.group.ids",
+      "type": "java.lang.String",
+      "description": "Description for vk.fetch.group.ids."
+    },
+    {
+      "name": "vk.filter.birthday.year.max",
+      "type": "java.lang.String",
+      "description": "Description for vk.filter.birthday.year.max."
+    },
+    {
+      "name": "vk.filter.birthday.year.min",
+      "type": "java.lang.String",
+      "description": "Description for vk.filter.birthday.year.min."
+    },
+    {
+      "name": "instagram.filter.minFollowers",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.minFollowers."
+    },
+    {
+      "name": "instagram.filter.maxFollowers",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.maxFollowers."
+    },
+    {
+      "name": "instagram.filter.minFolowing",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.minFolowing."
+    },
+    {
+      "name": "instagram.filter.maxFolowing",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.maxFolowing."
+    },
+    {
+      "name": "instagram.filter.minPostsAmount",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.minPostsAmount."
+    },
+    {
+      "name": "instagram.filter.maxSpentDaysFromLastPost",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.maxSpentDaysFromLastPost."
+    },
+    {
+      "name": "instagram.filter.minus.words",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.minus.words."
+    },
+    {
+      "name": "work.directory",
+      "type": "java.lang.String",
+      "description": "Description for work.directory."
+    },
+    {
+      "name": "vk.source.users.directory",
+      "type": "java.lang.String",
+      "description": "Description for vk.source.users.directory."
+    },
+    {
+      "name": "vk.merged.users.output",
+      "type": "java.lang.String",
+      "description": "Description for vk.merged.users.output."
+    },
+    {
+      "name": "instagram.filter.output",
+      "type": "java.lang.String",
+      "description": "Description for instagram.filter.output."
+    }
+  ]
+}
