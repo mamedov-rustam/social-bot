@@ -38,5 +38,7 @@ public class MergeUniqueUsersBotRunner implements ApplicationRunner {
         System.out.println("Merged from " + usersList.size() + " to " + users.size());
         System.out.println("Time spent for merge: " + (System.currentTimeMillis() - startTime) + " mills.");
         System.out.println("-------------------------------------------------");
+
+        System.exit(0);
     }
 }

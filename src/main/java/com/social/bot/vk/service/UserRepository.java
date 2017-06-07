@@ -10,11 +10,7 @@ public interface UserRepository {
 
     void saveMergedUsers(List<User> users);
 
-    void saveFilteredUsers(List<User> users);
-
     List<User> loadSourceUsers();
 
     List<User> loadMergedUsers();
-
-    List<User> loadFilteredUsers();
 }

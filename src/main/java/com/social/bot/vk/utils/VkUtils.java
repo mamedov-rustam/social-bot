@@ -19,6 +19,19 @@ public class VkUtils {
                 .collect(toList());
     }
 
+    public static boolean hasInstagram(User user) {
+        return StringUtils.isNotEmpty(user.getInstagram());
+    }
+
+    public static boolean isGoodDate(String birthdayDate, Integer birthdayYearMin, Integer birthdayYearMax) {
+            if (birthdayDate == null || birthdayDate.length() < 8) {
+                return false;
+            };
+
+            int year = Integer.parseInt(birthdayDate.split("\\.")[2]);
+            return year >= birthdayYearMin && year <= birthdayYearMax;
+    }
+
     public static boolean isJsonFileExist(String path) {
         File file = new File(path + ".json");
         return file.isFile() && file.exists();

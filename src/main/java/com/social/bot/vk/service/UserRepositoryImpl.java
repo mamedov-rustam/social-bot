@@ -18,8 +18,6 @@ public class UserRepositoryImpl implements UserRepository {
     private String directoryWithSourceUsers;
     @Value("${vk.merged.users.file}")
     private String fileWithMergedUsers;
-    @Value("${vk.filtered.users.file}")
-    private String fileWithFiltredUsers;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -36,11 +34,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void saveFilteredUsers(List<User> users) {
-        save(users, fileWithFiltredUsers);
-    }
-
-    @Override
     public List<User> loadSourceUsers() {
         File[] files = new File(directoryWithSourceUsers).listFiles();
         return Arrays.stream(files)
@@ -51,11 +44,6 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> loadMergedUsers() {
-        return load(fileWithMergedUsers);
-    }
-
-    @Override
-    public List<User> loadFilteredUsers() {
         return load(fileWithMergedUsers);
     }
 

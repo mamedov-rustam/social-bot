@@ -16,12 +16,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Order(1)
 public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
     @Value("${vk.bot.group.members.search.enable}")
     private boolean isEnabled;
+    @Value("${vk.filter.birthday.year.max}")
+    private Integer birthdayYearMax;
+    @Value("${vk.filter.birthday.year.min}")
+    private Integer birthdayYearMin;
     @Value("${vk.source.users.directory}")
     private String directoryWithSourceUsers;
     @Value("${vk.group.ids}")
@@ -69,10 +74,10 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
 
             List<User> users = vkSearchResponseWrapper.getResponse().getUsers();
             System.out.println("Fetched: " + users.size());
-            List<User> usersWithInstagram = VkUtils.withInstagram(users);
-            System.out.println("With instagram: " + usersWithInstagram.size());
+            List<User> filteredUsers = filterUsers(users);
+            System.out.println("With instagram: " + filteredUsers.size());
 
-            userRepository.saveSourceUsers(usersWithInstagram, groupId);
+            userRepository.saveSourceUsers(filteredUsers, groupId);
             double spentTime = (System.currentTimeMillis() - (double) startTime) / 1000;
             System.out.println("Saved successfully.");
             System.out.println("Time spent: " + spentTime + " seconds");
@@ -84,5 +89,12 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
         double appSpentTime = (System.currentTimeMillis() - (double) appStartTime) / 1000;
 
         System.out.println("Total time spent for fetching sources: " + appSpentTime + " seconds");
+    }
+
+    private List<User> filterUsers(List<User> users) {
+        return users.stream()
+                .filter(VkUtils::hasInstagram)
+                .filter(user -> VkUtils.isGoodDate(user.getBirthdayDate(), birthdayYearMin, birthdayYearMax))
+                .collect(Collectors.toList());
     }
 }

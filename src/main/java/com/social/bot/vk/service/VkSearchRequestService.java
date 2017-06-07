@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
+import static com.social.bot.vk.model.InfoField.BIRTHDAY_DATE;
 import static com.social.bot.vk.model.InfoField.CONNECTIONS;
 
 @Service
@@ -50,7 +51,7 @@ public class VkSearchRequestService {
                 .version(apiVersion)
                 .accessToken(accessToken)
                 .count(pageSize)
-                .fields(Arrays.asList(CONNECTIONS))
+                .fields(Arrays.asList(CONNECTIONS, BIRTHDAY_DATE))
                 .build();
     }
 
