@@ -29,7 +29,7 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
     private Integer birthdayYearMin;
     @Value("${vk.source.users.directory}")
     private String directoryWithSourceUsers;
-    @Value("${vk.group.ids}")
+    @Value("${vk.fetch.group.ids}")
     private String groupIds;
 
     @Autowired

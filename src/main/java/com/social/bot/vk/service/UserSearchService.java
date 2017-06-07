@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserSearchService {
-    @Value("${vk.fetch.size}")
+    @Value("${vk.fetch.page.size}")
     private Long pageSize;
 
     private final VkSearchHttpClient vkHttpClient;
