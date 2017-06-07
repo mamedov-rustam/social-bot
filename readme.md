@@ -1,12 +1,12 @@
 # Instagram
 
-### Filtering speed
+### Avarege filtering speed
 
-**-> 3 users/second** 
+**> 3 users/second** 
 
-**-> 180 users/minute** 
+**> 180 users/minute** 
 
-**-> 10 800 users/hour**
+**> 10 800 users/hour**
 
 ### Filtering params
 
