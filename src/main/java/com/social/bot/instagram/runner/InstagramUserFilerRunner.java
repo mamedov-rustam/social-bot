@@ -110,7 +110,7 @@ public class InstagramUserFilerRunner implements ApplicationRunner {
                 })
                 .map(user -> {
                     List<Post> posts = sortByDate(user.getMedia().getPosts());
-                    List<Post> subPosts = posts.subList(0, 2);
+                    List<Post> subPosts = posts.subList(0, 3);
                     user.getMedia().setPosts(subPosts);
 
                     return user;
