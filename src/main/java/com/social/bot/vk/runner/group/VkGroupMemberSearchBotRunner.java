@@ -75,7 +75,7 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
             List<User> users = vkSearchResponseWrapper.getResponse().getUsers();
             System.out.println("Fetched: " + users.size());
             List<User> filteredUsers = filterUsers(users);
-            System.out.println("With instagram: " + filteredUsers.size());
+            System.out.println("After filtering: " + filteredUsers.size());
 
             userRepository.saveSourceUsers(filteredUsers, groupId);
             double spentTime = (System.currentTimeMillis() - (double) startTime) / 1000;
