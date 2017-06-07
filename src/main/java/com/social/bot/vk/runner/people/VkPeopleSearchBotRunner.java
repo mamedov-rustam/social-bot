@@ -5,8 +5,8 @@ import com.social.bot.vk.common.VkSearchResponse;
 import com.social.bot.vk.model.Country;
 import com.social.bot.vk.model.Sex;
 import com.social.bot.vk.model.Status;
-import com.social.bot.vk.model.User;
-import com.social.bot.vk.service.UserRepository;
+import com.social.bot.vk.model.VkUser;
+import com.social.bot.vk.service.VkUserRepository;
 import com.social.bot.vk.service.VkSearchRequestService;
 import com.social.bot.vk.service.UserSearchService;
 import com.social.bot.vk.utils.VkUtils;
@@ -29,7 +29,7 @@ public class VkPeopleSearchBotRunner implements ApplicationRunner {
     @Autowired
     private UserSearchService userService;
     @Autowired
-    private UserRepository userRepository;
+    private VkUserRepository userRepository;
     @Autowired
     private VkSearchRequestService vkSearchRequestService;
 
@@ -69,9 +69,9 @@ public class VkPeopleSearchBotRunner implements ApplicationRunner {
                         System.out.println("Birthday month: " + month);
                         System.out.println("********************");
 
-                        List<User> users = resp.getUsers();
+                        List<VkUser> users = resp.getUsers();
                         sourceUsers += users.size();
-                        List<User> usersWithInstagram = VkUtils.withInstagram(users);
+                        List<VkUser> usersWithInstagram = VkUtils.withInstagram(users);
 
                         userRepository.saveSourceUsers(usersWithInstagram, "from_search");
                         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-");

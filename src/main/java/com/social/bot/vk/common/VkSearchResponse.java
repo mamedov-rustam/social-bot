@@ -1,7 +1,7 @@
 package com.social.bot.vk.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.social.bot.vk.model.User;
+import com.social.bot.vk.model.VkUser;
 import lombok.Data;
 
 import java.util.List;
@@ -11,11 +11,11 @@ public class VkSearchResponse {
     @JsonProperty("count")
     private Long count;
     @JsonProperty("items")
-    private List<User> users;
+    private List<VkUser> users;
 
     // Fucking shit like 'alternate deserialization name'
     @JsonProperty("users")
-    public void setUsersAsUsers(List<User> users) {
+    public void setUsersAsUsers(List<VkUser> users) {
         this.users = users;
     }
 }

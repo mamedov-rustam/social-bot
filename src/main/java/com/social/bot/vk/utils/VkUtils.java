@@ -1,7 +1,7 @@
 package com.social.bot.vk.utils;
 
 
-import com.social.bot.vk.model.User;
+import com.social.bot.vk.model.VkUser;
 import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
 
@@ -13,13 +13,13 @@ import static java.util.stream.Collectors.toList;
 
 public class VkUtils {
 
-    public static List<User> withInstagram(List<User> users) {
+    public static List<VkUser> withInstagram(List<VkUser> users) {
         return users.stream()
                 .filter(user -> StringUtils.isNotEmpty(user.getInstagram()))
                 .collect(toList());
     }
 
-    public static boolean hasInstagram(User user) {
+    public static boolean hasInstagram(VkUser user) {
         return StringUtils.isNotEmpty(user.getInstagram());
     }
 

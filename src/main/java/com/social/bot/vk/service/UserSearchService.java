@@ -29,6 +29,10 @@ public class UserSearchService {
 
     public Long findTotalPagesWithUsersForGroup(VkSearchRequest vkSearchRequest) {
         VkSearchResponseWrapper vkSearchResponseWrapper = vkHttpClient.searchForPeopleInGroup(vkSearchRequest);
+        if (vkSearchResponseWrapper.getError() != null) {
+            throw new RuntimeException(vkSearchResponseWrapper.getError().getMessage());
+        }
+
         return (long) Math.ceil(vkSearchResponseWrapper.getResponse().getCount() / (double)pageSize);
     }
 }

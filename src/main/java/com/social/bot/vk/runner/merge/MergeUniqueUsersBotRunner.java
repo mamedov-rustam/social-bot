@@ -1,7 +1,7 @@
 package com.social.bot.vk.runner.merge;
 
-import com.social.bot.vk.model.User;
-import com.social.bot.vk.service.UserRepository;
+import com.social.bot.vk.model.VkUser;
+import com.social.bot.vk.service.VkUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
@@ -18,7 +18,7 @@ public class MergeUniqueUsersBotRunner implements ApplicationRunner {
     private boolean isEnabled;
 
     @Autowired
-    private UserRepository userRepository;
+    private VkUserRepository userRepository;
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
@@ -30,15 +30,13 @@ public class MergeUniqueUsersBotRunner implements ApplicationRunner {
         System.out.println("\n\n\n-------------------------------------------------");
         System.out.println("Start merging source users");
 
-        List<User> usersList = userRepository.loadSourceUsers();
-        Set<User> users = new HashSet<>(usersList);
-        List<User> uniqueUsers = new ArrayList<>(users);
+        List<VkUser> usersList = userRepository.loadSourceUsers();
+        Set<VkUser> users = new HashSet<>(usersList);
+        List<VkUser> uniqueUsers = new ArrayList<>(users);
         userRepository.saveMergedUsers(uniqueUsers);
 
         System.out.println("Merged from " + usersList.size() + " to " + users.size());
         System.out.println("Time spent for merge: " + (System.currentTimeMillis() - startTime) + " mills.");
         System.out.println("-------------------------------------------------");
-
-        System.exit(0);
     }
 }

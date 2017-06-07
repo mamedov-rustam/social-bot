@@ -2,8 +2,8 @@ package com.social.bot.vk.runner.group;
 
 import com.social.bot.vk.common.VkSearchRequest;
 import com.social.bot.vk.common.VkSearchResponseWrapper;
-import com.social.bot.vk.model.User;
-import com.social.bot.vk.service.UserRepository;
+import com.social.bot.vk.model.VkUser;
+import com.social.bot.vk.service.VkUserRepository;
 import com.social.bot.vk.service.UserSearchService;
 import com.social.bot.vk.service.VkSearchRequestService;
 import com.social.bot.vk.utils.VkUtils;
@@ -37,7 +37,7 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
     @Autowired
     private UserSearchService userSearchService;
     @Autowired
-    private UserRepository userRepository;
+    private VkUserRepository userRepository;
 
     @Override
     public void run(ApplicationArguments applicationArguments) throws Exception {
@@ -72,9 +72,9 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
             System.out.println("Start fetching page #" + (currentPage + 1) + " for " + groupId);
             VkSearchResponseWrapper vkSearchResponseWrapper = userSearchService.findUsersInGroup(request);
 
-            List<User> users = vkSearchResponseWrapper.getResponse().getUsers();
+            List<VkUser> users = vkSearchResponseWrapper.getResponse().getUsers();
             System.out.println("Fetched: " + users.size());
-            List<User> filteredUsers = filterUsers(users);
+            List<VkUser> filteredUsers = filterUsers(users);
             System.out.println("After filtering: " + filteredUsers.size());
 
             userRepository.saveSourceUsers(filteredUsers, groupId);
@@ -91,7 +91,7 @@ public class VkGroupMemberSearchBotRunner implements ApplicationRunner {
         System.out.println("Total time spent for fetching sources: " + appSpentTime + " seconds");
     }
 
-    private List<User> filterUsers(List<User> users) {
+    private List<VkUser> filterUsers(List<VkUser> users) {
         return users.stream()
                 .filter(VkUtils::hasInstagram)
                 .filter(user -> VkUtils.isGoodDate(user.getBirthdayDate(), birthdayYearMin, birthdayYearMax))

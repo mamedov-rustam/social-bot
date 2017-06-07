@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class User {
+public class VkUser {
     @JsonProperty("id")
     private String id;
     @JsonProperty("first_name")
@@ -32,7 +32,7 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
 
-        User user = (User) o;
+        VkUser user = (VkUser) o;
 
         return id != null ? id.equals(user.id) : user.id == null;
     }
