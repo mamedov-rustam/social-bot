@@ -23,6 +23,6 @@ followers count value.
 - **instagram.filter.maxSpentDaysFromLastPost** [number] - maximal amount of passed days from latest post date.
 
 # Where to find `access_token` ?
-
+You can simple get it from the URL after authorization by link:
 - [VK](https://oauth.vk.com/authorize?client_id=5849076&display=page&scope=friends&response_type=token&v=5.65&state=123456)
 - [Intagram](https://api.instagram.com/oauth/authorize/?client_id=daf63aa91ff2444d82917f210a802698&redirect_uri=http://localhost.com&response_type=token&scope=public_content)
