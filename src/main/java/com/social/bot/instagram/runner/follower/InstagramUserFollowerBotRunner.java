@@ -84,6 +84,12 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
         String userProfileUrl = String.format(USER_PROFILE_TEMPLATE_URL, username);
         driver.get(userProfileUrl);
 
+        WebElement followButton = driver.findElementByCssSelector(Css.FOLLOW_BUTTON);
+        if (followButton.getText().equals("Following")) {
+            System.out.println("User already following by " + accountLogin);
+            return;
+        }
+
         System.out.println("Start liking images...");
         likeImage(driver, Css.FIRST_IMAGE);
         likeImage(driver, Css.SECOND_IMAGE);
@@ -91,13 +97,6 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
         System.out.println("Images liking successfully done.");
 
         System.out.println("Start following...");
-        WebElement followButton = driver.findElementByCssSelector(Css.FOLLOW_BUTTON);
-
-        if (followButton.getText().equals("Following")) {
-            System.out.println("User already following by " + accountLogin);
-            return;
-        }
-
         followButton.click();
         while (!followButton.getText().equals("Following")) {
             VkUtils.randomSleep(1_000L);
