@@ -87,7 +87,7 @@ public class UnfollowerBotRunner implements ApplicationRunner {
                 }
 
                 System.out.println("\n---------------------------------");
-                System.out.println("Unfollow from " + following.getUsername());
+                System.out.println("Unfollowed from " + following.getUsername());
                 System.out.println("Remains: " + maxUnfollowCounter);
                 System.out.println("---------------------------------");
 
