@@ -82,7 +82,5 @@ public class VkPeopleSearchBotRunner implements ApplicationRunner {
                 }
             }
         }
-
-        System.exit(0);
     }
 }

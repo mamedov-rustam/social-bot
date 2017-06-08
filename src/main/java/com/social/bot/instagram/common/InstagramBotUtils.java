@@ -12,6 +12,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClick
 
 public final class InstagramBotUtils {
     public static final String LOGIN_PAGE_URL="https://www.instagram.com/";
+    public static final String USER_PROFILE_TEMPLATE_URL="https://www.instagram.com/%s";
 
     private InstagramBotUtils() {
     }

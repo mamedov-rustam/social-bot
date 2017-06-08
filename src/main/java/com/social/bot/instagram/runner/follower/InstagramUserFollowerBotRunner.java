@@ -16,14 +16,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.social.bot.instagram.common.InstagramBotUtils.USER_PROFILE_TEMPLATE_URL;
 import static com.social.bot.instagram.common.InstagramSelectors.*;
 import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
 @Service
 public class InstagramUserFollowerBotRunner implements ApplicationRunner {
-    private static final String USER_PROFILE_TEMPLATE_URL="https://www.instagram.com/%s";
-
     @Value("${instagram.bot.follower.enable}")
     private boolean isEnabled;
     @Value("${instagram.user.login}")
