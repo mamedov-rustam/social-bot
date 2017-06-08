@@ -84,7 +84,7 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
         long startTime = System.currentTimeMillis();
         AtomicLong requestCounter = new AtomicLong(0);
         AtomicLong badRequestCounter = new AtomicLong(0);
-        AtomicLong successfullySaved = new AtomicLong(0);
+        AtomicLong goodUsers = new AtomicLong(0);
         AtomicLong badUser = new AtomicLong(0);
 
         return vkUsers.stream()
@@ -92,7 +92,7 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
                 .peek(respWrap -> {
                     if (requestCounter.get() % 12 == 0) {
                         logCurrentState((long)vkUsers.size(), requestCounter.get(), badRequestCounter.get(),
-                                successfullySaved.get(), badUser.get(), startTime);
+                                goodUsers.get(), badUser.get(), startTime);
                     }
 
                     requestCounter.incrementAndGet();
@@ -104,14 +104,12 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
                 .map(InstagramUserResponseWrapper::getUser)
                 .filter(user -> {
                     if (isUserGood(user)) {
+                        goodUsers.incrementAndGet();
                         return true;
                     }
 
                     badUser.incrementAndGet();
                     return false;
-                })
-                .peek(user -> {
-                    successfullySaved.incrementAndGet();
                 })
                 .map(user -> {
                     List<Post> posts = sortByDate(user.getMedia().getPosts());
@@ -123,19 +121,20 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
                 .collect(toList());
     }
 
-    private void logCurrentState(Long total, Long requested, Long withErrors, Long successfullySaved, Long badUsers, Long startTime) {
+    private void logCurrentState(Long total, Long requested, Long withErrors, Long goodUsers, Long badUsers, Long startTime) {
         long spentTimeInSeconds = (System.currentTimeMillis() - startTime) / 1000;
         long spentMinutes = spentTimeInSeconds / 60;
         long spentSeconds = spentTimeInSeconds % 60;
 
-        System.out.println("----------------------------");
-        System.out.println("Sent requests: " + requested);
+        System.out.println("\n----------------------------");
         System.out.println("Remains: " + (total - requested));
-        System.out.println("Good users: " + successfullySaved);
+        System.out.println("Good users: " + goodUsers);
+        System.out.println("Bad users: " + badUsers);
         System.out.println("With errors: " + withErrors);
-        System.out.println("Bad users: " + successfullySaved);
-        System.out.println("Time spent: " + spentMinutes + " minutes " + spentSeconds + " seconds.");
+        System.out.println("Sent requests: " + requested);
         System.out.println("----------------------------");
+        System.out.println("Time spent: " + spentMinutes + " minutes " + spentSeconds + " seconds.");
+        System.out.println("----------------------------\n");
     }
 
     @SuppressWarnings("all")
