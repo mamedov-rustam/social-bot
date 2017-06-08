@@ -78,8 +78,6 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
         System.out.println("-----------------------------------------");
         double spentTimeInSeconds = (System.currentTimeMillis() - botStartTime) / 1000d;
         System.out.println("Total time spent on instagram filtering " + spentTimeInSeconds + " seconds");
-
-        System.exit(0);
     }
 
     private List<InstagramUser> searchForFilteredUsers(List<VkUser> vkUsers) {
@@ -87,13 +85,14 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
         AtomicLong requestCounter = new AtomicLong(0);
         AtomicLong badRequestCounter = new AtomicLong(0);
         AtomicLong successfullySaved = new AtomicLong(0);
+        AtomicLong badUser = new AtomicLong(0);
 
         return vkUsers.stream()
                 .map(vkUser -> instagramHttpClient.loadUserInfo(vkUser.getInstagram()))
                 .peek(respWrap -> {
                     if (requestCounter.get() % 12 == 0) {
-                        logCurrentState((long)vkUsers.size(), requestCounter.get(),
-                                badRequestCounter.get(), successfullySaved.get(), startTime);
+                        logCurrentState((long)vkUsers.size(), requestCounter.get(), badRequestCounter.get(),
+                                successfullySaved.get(), badUser.get(), startTime);
                     }
 
                     requestCounter.incrementAndGet();
@@ -103,7 +102,14 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
                 })
                 .filter(responseWrapper -> !responseWrapper.isHasError())
                 .map(InstagramUserResponseWrapper::getUser)
-                .filter(this::isUserGood)
+                .filter(user -> {
+                    if (isUserGood(user)) {
+                        return true;
+                    }
+
+                    badUser.incrementAndGet();
+                    return false;
+                })
                 .peek(user -> {
                     successfullySaved.incrementAndGet();
                 })
@@ -117,7 +123,7 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
                 .collect(toList());
     }
 
-    private void logCurrentState(Long total, Long requested, Long withErrors, Long successfullySaved, Long startTime) {
+    private void logCurrentState(Long total, Long requested, Long withErrors, Long successfullySaved, Long badUsers, Long startTime) {
         long spentTimeInSeconds = (System.currentTimeMillis() - startTime) / 1000;
         long spentMinutes = spentTimeInSeconds / 60;
         long spentSeconds = spentTimeInSeconds % 60;
@@ -125,8 +131,9 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
         System.out.println("----------------------------");
         System.out.println("Sent requests: " + requested);
         System.out.println("Remains: " + (total - requested));
-        System.out.println("With errors: " + withErrors);
         System.out.println("Good users: " + successfullySaved);
+        System.out.println("With errors: " + withErrors);
+        System.out.println("Bad users: " + successfullySaved);
         System.out.println("Time spent: " + spentMinutes + " minutes " + spentSeconds + " seconds.");
         System.out.println("----------------------------");
     }

@@ -114,6 +114,16 @@
       "name": "instagram.bot.follower.enable",
       "type": "java.lang.String",
       "description": "Description for instagram.bot.follower.enable."
+    },
+    {
+      "name": "instagram.user.login",
+      "type": "java.lang.String",
+      "description": "Description for instagram.user.login."
+    },
+    {
+      "name": "instagram.user.password",
+      "type": "java.lang.String",
+      "description": "Description for instagram.user.password."
     }
   ]
 }
