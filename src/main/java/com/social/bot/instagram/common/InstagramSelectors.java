@@ -1,4 +1,4 @@
-package com.social.bot.instagram.runner.follower;
+package com.social.bot.instagram.common;
 
 
 public final class InstagramSelectors {
