@@ -6,8 +6,6 @@ import lombok.Data;
 
 @Data
 public class Following {
-    @JsonProperty("followed_by_viewer")
-    private boolean myFollower;
     @JsonProperty("username")
     private String username;
 }
