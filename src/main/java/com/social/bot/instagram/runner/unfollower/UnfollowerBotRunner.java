@@ -18,6 +18,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -90,6 +91,7 @@ public class UnfollowerBotRunner implements ApplicationRunner {
 
                 System.out.println("\n---------------------------------");
                 System.out.println("Unfollowed from " + following.getUsername());
+                System.out.println("Timestamp: " + LocalDateTime.now());
                 System.out.println("Remains: " + maxUnfollowCounter);
                 System.out.println("---------------------------------");
 
