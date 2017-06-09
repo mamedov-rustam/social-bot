@@ -34,6 +34,8 @@ public class UnfollowerBotRunner implements ApplicationRunner {
     private boolean isEnabled;
     @Value("${instagram.bot.unfollow.maximum}")
     private Long unfollowMaximum;
+    @Value("${instagram.bot.unfollow.delay}")
+    private Long delayInSeconds;
     @Value("${instagram.user.login}")
     private String userLogin;
     @Value("${instagram.user.password}")
@@ -91,7 +93,9 @@ public class UnfollowerBotRunner implements ApplicationRunner {
                 System.out.println("Remains: " + maxUnfollowCounter);
                 System.out.println("---------------------------------");
 
-                Thread.sleep(5*60*1000);
+                if (maxUnfollowCounter != 0) {
+                    Thread.sleep(delayInSeconds * 1000);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

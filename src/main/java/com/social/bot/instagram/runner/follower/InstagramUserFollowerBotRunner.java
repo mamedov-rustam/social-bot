@@ -31,6 +31,8 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
     private String accountPassword;
     @Value("${webdriver.chrome.driver}")
     private String chromeDriverPath;
+    @Value("${instagram.bot.follower.delay}")
+    private Long delayInSeconds;
 
 
     @Autowired
@@ -57,7 +59,10 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
         instagramUsers.forEach(u -> {
             try {
                 System.out.println("\n--------------------------");
-                likeAndFollow(driver, u);
+                boolean isLikedAndFollowed = likeAndFollow(driver, u);
+                if (isLikedAndFollowed) {
+                    Thread.sleep(delayInSeconds * 1000);
+                }
                 System.out.println("--------------------------");
                 System.out.println("Remains " + counter.decrementAndGet() + " users.");
                 System.out.println("--------------------------\n");
@@ -77,7 +82,7 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
         driver.close();
     }
 
-    private void likeAndFollow(ChromeDriver driver, InstagramUser instagramUser) {
+    private boolean likeAndFollow(ChromeDriver driver, InstagramUser instagramUser) {
         String username = instagramUser.getUsername();
         System.out.println("Start processing user: " + username);
         String userProfileUrl = String.format(USER_PROFILE_TEMPLATE_URL, username);
@@ -86,7 +91,7 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
         WebElement followButton = driver.findElementByCssSelector(Css.FOLLOW_BUTTON);
         if (followButton.getText().equals("Following")) {
             System.out.println("User already following by " + accountLogin);
-            return;
+            return false;
         }
 
         System.out.println("Start liking images...");
@@ -102,6 +107,8 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
         }
         System.out.println("Following successfully done.");
         System.out.println("User processed successfully.");
+
+        return true;
     }
 
     private void likeImage(ChromeDriver driver, String cssImageSelector) {
