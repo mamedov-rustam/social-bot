@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.social.bot.instagram.common.InstagramBotUtils.USER_PROFILE_TEMPLATE_URL;
+import static com.social.bot.instagram.common.InstagramBotUtils.findFollowButton;
 import static com.social.bot.instagram.common.InstagramSelectors.*;
 import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -60,12 +61,12 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
             try {
                 System.out.println("\n--------------------------");
                 boolean isLikedAndFollowed = likeAndFollow(driver, u);
-                if (isLikedAndFollowed) {
-                    Thread.sleep(delayInSeconds * 1000);
-                }
                 System.out.println("--------------------------");
                 System.out.println("Remains " + counter.decrementAndGet() + " users.");
                 System.out.println("--------------------------\n");
+                if (isLikedAndFollowed) {
+                    Thread.sleep(delayInSeconds * 1000);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -85,10 +86,15 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
     private boolean likeAndFollow(ChromeDriver driver, InstagramUser instagramUser) {
         String username = instagramUser.getUsername();
         System.out.println("Start processing user: " + username);
-        String userProfileUrl = String.format(USER_PROFILE_TEMPLATE_URL, username);
-        driver.get(userProfileUrl);
+        loadUserProfilePage(driver, username);
 
-        WebElement followButton = driver.findElementByCssSelector(Css.FOLLOW_BUTTON);
+        if (driver.findElementsByCssSelector(Css.THIRD_IMAGE).isEmpty()) {
+            System.out.println("User '" + username + "' has no photos, or his account has private access.");
+            System.out.println("Fucking user will be skipped.");
+            return false;
+        }
+
+        WebElement followButton = findFollowButton(driver);
         if (followButton.getText().equals("Following")) {
             System.out.println("User already following by " + accountLogin);
             return false;
@@ -98,26 +104,48 @@ public class InstagramUserFollowerBotRunner implements ApplicationRunner {
         likeImage(driver, Css.FIRST_IMAGE);
         likeImage(driver, Css.SECOND_IMAGE);
         likeImage(driver, Css.THIRD_IMAGE);
+        driver.executeScript("scroll(0,0)");
+        VkUtils.randomSleep(1_000L);
         System.out.println("Images liking successfully done.");
 
         System.out.println("Start following...");
+        followButton = findFollowButton(driver);
         followButton.click();
         while (!followButton.getText().equals("Following")) {
             VkUtils.randomSleep(1_000L);
         }
         System.out.println("Following successfully done.");
-        System.out.println("User processed successfully.");
+        System.out.println("User '" + username + "' processed successfully.");
 
         return true;
     }
 
-    private void likeImage(ChromeDriver driver, String cssImageSelector) {
-        WebElement firstImageElement = driver.findElementByCssSelector(cssImageSelector);
-        firstImageElement.click();
+    private void loadUserProfilePage(ChromeDriver driver, String username) {
+        String userProfileUrl = String.format(USER_PROFILE_TEMPLATE_URL, username);
+        driver.get(userProfileUrl);
 
-        WebDriverWait firstImageLikeButtonWait = new WebDriverWait(driver, 15);
-        WebElement firstImageLikeButton = firstImageLikeButtonWait.until(elementToBeClickable(cssSelector(Css.LIKE_BUTTON)));
-        firstImageLikeButton.click();
+        int maxTries = 3;
+        while (maxTries != 0) {
+            try {
+                WebDriverWait profileDropdown = new WebDriverWait(driver, 10);
+                profileDropdown.until(elementToBeClickable(cssSelector(Css.PROFILE_DROPDOWN)));
+                return;
+            } catch (Exception e) {
+                maxTries--;
+                driver.navigate().refresh();
+            }
+        }
+
+        throw new IllegalStateException("Couldn't find DOM element from profile dropdown.");
+    }
+
+    private void likeImage(ChromeDriver driver, String cssImageSelector) {
+        WebElement imageElement = driver.findElementByCssSelector(cssImageSelector);
+        imageElement.click();
+
+        WebDriverWait imageLikeButtonWait = new WebDriverWait(driver, 15);
+        WebElement imageLikeButton = imageLikeButtonWait.until(elementToBeClickable(cssSelector(Css.LIKE_BUTTON)));
+        imageLikeButton.click();
 
         VkUtils.randomSleep(500L);
         driver.navigate().back();

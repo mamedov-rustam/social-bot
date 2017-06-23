@@ -7,6 +7,10 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 
+import java.util.List;
+
+import static com.social.bot.instagram.common.InstagramSelectors.Css.FOLLOW_BUTTON;
+import static com.social.bot.instagram.common.InstagramSelectors.Css._FOLLOW_BUTTON;
 import static org.openqa.selenium.By.cssSelector;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
@@ -15,6 +19,15 @@ public final class InstagramBotUtils {
     public static final String USER_PROFILE_TEMPLATE_URL="https://www.instagram.com/%s";
 
     private InstagramBotUtils() {
+    }
+
+    public static WebElement findFollowButton(ChromeDriver driver) {
+        List<WebElement> followButtonList = driver.findElementsByCssSelector(FOLLOW_BUTTON);
+        if (followButtonList.isEmpty()) {
+            return driver.findElementByCssSelector(_FOLLOW_BUTTON);
+        }
+
+        return followButtonList.get(0);
     }
 
     public static void login(ChromeDriver driver, String userLogin, String userPassword) {

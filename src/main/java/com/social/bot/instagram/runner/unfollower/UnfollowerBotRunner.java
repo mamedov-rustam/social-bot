@@ -24,8 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.social.bot.instagram.common.InstagramBotUtils.USER_PROFILE_TEMPLATE_URL;
-import static com.social.bot.instagram.common.InstagramSelectors.Css.FOLLOW_BUTTON;
-import static com.social.bot.instagram.common.InstagramSelectors.Css._FOLLOW_BUTTON;
+import static com.social.bot.instagram.common.InstagramBotUtils.findFollowButton;
 
 
 @Order(5)
@@ -113,15 +112,6 @@ public class UnfollowerBotRunner implements ApplicationRunner {
         System.out.println("-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 
         driver.quit();
-    }
-
-    private WebElement findFollowButton(ChromeDriver driver) {
-        List<WebElement> followButtonList = driver.findElementsByCssSelector(FOLLOW_BUTTON);
-        if (followButtonList.isEmpty()) {
-            return driver.findElementByCssSelector(_FOLLOW_BUTTON);
-        }
-
-        return followButtonList.get(0);
     }
 
     @SneakyThrows

@@ -35,9 +35,9 @@ public class InstagramUserFilterBotRunner implements ApplicationRunner {
     @Value("${instagram.filter.maxFollowers}")
     private Long maxFolowers;
 
-    @Value("${instagram.filter.maxFolowing}")
+    @Value("${instagram.filter.maxFollowing}")
     private Long maxFolowing;
-    @Value("${instagram.filter.minFolowing}")
+    @Value("${instagram.filter.minFollowing}")
     private Long minFolowing;
 
     @Value("${instagram.filter.minPostsAmount}")
